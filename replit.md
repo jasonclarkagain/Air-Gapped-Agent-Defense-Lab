@@ -1,6 +1,6 @@
-# [Project name]
+# Redline Lab Console
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A safe-by-default operations console for coordinating defensive AI agents across isolated Utah and Nevada research labs.
 
 ## Run & Operate
 
@@ -22,15 +22,23 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/redline-lab-console/src/App.tsx` — the working console surface and its local lab/agent/task state
+- `artifacts/redline-lab-console/src/index.css` — the console theme, typography, responsive layout, and motion
+- `artifacts/api-server` — shared API service, currently retained for future lab connector endpoints
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The first build is frontend-only with local in-memory state so the safety model and operator experience can be reviewed before connecting real lab systems.
+- Utah and Nevada are treated as separate site boundaries in the UI; dispatch records a single site and an allowlisted scope.
+- Human approval is explicit for sensitive actions, with visible audit events for dispatches, agent state changes, and approval decisions.
+- The console does not model autonomous egress or boundary crossing; these are presented as prohibited posture checks.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Overview of both isolated sites, agent health, task activity, approvals, and boundary posture.
+- Task queue with scoped dispatch flow and human-gate warning copy.
+- Agent fleet controls for pausing and resuming workers.
+- Site operating picture and audit log filters.
 
 ## User preferences
 
@@ -38,7 +46,8 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- The current data is intentionally local demo state; no real database, connector, or autonomous agent runtime is attached yet.
+- Preserve the explicit site and scope boundaries when adding persistence or connectors.
 
 ## Pointers
 

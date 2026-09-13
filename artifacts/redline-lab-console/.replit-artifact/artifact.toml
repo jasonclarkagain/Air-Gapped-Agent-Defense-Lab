@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Redline Lab Console"
+description = "A safe-by-default operations console for coordinating defensive AI agents across isolated Utah and Nevada research labs, with scoped task dispatch, approvals, site health, and immutable activity visibility."
+version = "1.0.0"
+id = "artifacts/redline-lab-console"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23290
+
+[services.development]
+run = "pnpm --filter @workspace/redline-lab-console run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/redline-lab-console", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/redline-lab-console/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23290"
+BASE_PATH = "/"
