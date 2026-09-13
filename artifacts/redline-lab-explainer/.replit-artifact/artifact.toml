@@ -1,0 +1,29 @@
+kind = "video"
+previewPath = "/redline-lab-explainer/"
+title = "Redline Lab Explainer"
+description = "A short animated explainer for Redline Lab Console, showing safe coordination across isolated Utah and Nevada research labs with human approval gates and full auditability."
+version = "1.0.0"
+id = "artifacts/redline-lab-explainer"
+router = "path"
+videoAspectRatio = "16:9"
+
+[[services]]
+name = "web"
+paths = [ "/redline-lab-explainer/" ]
+localPort = 22679
+
+[services.development]
+run = "pnpm --filter @workspace/redline-lab-explainer run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/redline-lab-explainer", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/redline-lab-explainer/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22679"
+BASE_PATH = "/redline-lab-explainer/"
