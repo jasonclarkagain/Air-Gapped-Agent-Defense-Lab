@@ -261,3 +261,115 @@ body {
 .video-media-frame[data-media-position='left'] > :is(img, video) {
   object-position: left;
 }
+
+.video-control-bar {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .65rem .9rem;
+  color: var(--color-text-inverse);
+  background: rgba(20, 39, 44, .86);
+  backdrop-filter: blur(14px);
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .2s ease-out, opacity .2s ease-out;
+}
+
+.video-control-bar--visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.video-control-button {
+  display: grid;
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: .45rem;
+  color: rgba(238, 233, 223, .72);
+  background: transparent;
+  cursor: pointer;
+  transition: background .18s ease, color .18s ease;
+}
+
+.video-control-button:hover,
+.video-control-button--active {
+  color: var(--color-text-inverse);
+  background: rgba(238, 233, 223, .14);
+}
+
+.video-control-divider {
+  width: 1px;
+  align-self: stretch;
+  margin: .25rem .2rem;
+  background: rgba(238, 233, 223, .18);
+}
+
+.video-control-progress {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: .3rem;
+  min-width: 0;
+}
+
+.video-control-segment {
+  position: relative;
+  flex: 1 1 0;
+  height: .42rem;
+  min-width: .45rem;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(238, 233, 223, .2);
+  cursor: pointer;
+}
+
+.video-control-segment__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: block;
+  border-radius: inherit;
+  background: var(--color-primary);
+  transition: width .1s linear;
+}
+
+.video-control-counter,
+.video-control-time {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: clamp(.56rem, 1.1vmin, .82rem);
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+
+.video-control-counter {
+  color: rgba(238, 233, 223, .55);
+}
+
+.video-control-time {
+  min-width: 8.5ch;
+  color: rgba(238, 233, 223, .82);
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .video-control-bar {
+    gap: .35rem;
+    padding-inline: .55rem;
+  }
+
+  .video-control-button {
+    width: 2.3rem;
+    height: 2.3rem;
+  }
+
+  .video-control-time {
+    display: none;
+  }
+}

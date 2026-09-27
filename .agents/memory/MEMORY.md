@@ -1,0 +1,1 @@
+- [Video audio fallback](video-audio-fallback.md) — explainer videos should remain exportable without generated music when audio generation is unavailable in the current workspace mode.

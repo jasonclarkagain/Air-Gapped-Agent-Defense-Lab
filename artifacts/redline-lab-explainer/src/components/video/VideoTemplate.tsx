@@ -1,11 +1,13 @@
 import {
   SafeFrame,
   VideoCanvas,
+  VideoPausedContext,
   type VideoAspectRatio,
   useVideoPlayer,
 } from '@/lib/video';
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
+import { useEffect, type ComponentType } from 'react';
 import { Scene1 } from './video_scenes/Scene1';
 import { Scene2 } from './video_scenes/Scene2';
 import { Scene3 } from './video_scenes/Scene3';
@@ -13,7 +15,7 @@ import { Scene4 } from './video_scenes/Scene4';
 import { Scene5 } from './video_scenes/Scene5';
 import { Scene6 } from './video_scenes/Scene6';
 
-const SCENE_DURATIONS = {
+export const SCENE_DURATIONS = {
   intro: 4800,
   sites: 4300,
   fleet: 4700,
@@ -24,27 +26,57 @@ const SCENE_DURATIONS = {
 
 const VIDEO_ASPECT_RATIO: VideoAspectRatio = '16:9';
 
-export default function VideoTemplate() {
-  const { currentScene } = useVideoPlayer({
-    durations: SCENE_DURATIONS,
+const SCENE_COMPONENTS: Record<string, ComponentType> = {
+  intro: Scene1,
+  sites: Scene2,
+  fleet: Scene3,
+  approval: Scene4,
+  audit: Scene5,
+  close: Scene6,
+};
+
+export interface VideoTemplateProps {
+  durations?: Record<string, number>;
+  loop?: boolean;
+  paused?: boolean;
+  onSceneChange?: (sceneKey: string) => void;
+}
+
+export default function VideoTemplate({
+  durations = SCENE_DURATIONS,
+  loop = true,
+  paused = false,
+  onSceneChange,
+}: VideoTemplateProps = {}) {
+  const { currentScene, currentSceneKey } = useVideoPlayer({
+    durations,
+    loop,
+    paused,
   });
+  const baseSceneKey = currentSceneKey.replace(/_r[12]$/, '');
+  const sceneIndex = Math.max(
+    0,
+    Object.keys(SCENE_DURATIONS).indexOf(baseSceneKey),
+  );
+  const SceneComponent = SCENE_COMPONENTS[baseSceneKey];
+
+  useEffect(() => {
+    onSceneChange?.(currentSceneKey);
+  }, [currentSceneKey, onSceneChange]);
 
   return (
-    <VideoCanvas
-      aspectRatio={VIDEO_ASPECT_RATIO}
-      className="video-root"
-      style={{ backgroundColor: 'var(--color-bg-light)' }}
-    >
-      <PersistentAtmosphere currentScene={currentScene} />
-      <AnimatePresence mode="sync">
-        {currentScene === 0 && <Scene1 key="intro" />}
-        {currentScene === 1 && <Scene2 key="sites" />}
-        {currentScene === 2 && <Scene3 key="fleet" />}
-        {currentScene === 3 && <Scene4 key="approval" />}
-        {currentScene === 4 && <Scene5 key="audit" />}
-        {currentScene === 5 && <Scene6 key="close" />}
-      </AnimatePresence>
-    </VideoCanvas>
+    <VideoPausedContext.Provider value={paused}>
+      <VideoCanvas
+        aspectRatio={VIDEO_ASPECT_RATIO}
+        className="video-root"
+        style={{ backgroundColor: 'var(--color-bg-light)' }}
+      >
+        <PersistentAtmosphere currentScene={sceneIndex} />
+        <AnimatePresence mode="sync">
+          {SceneComponent && <SceneComponent key={currentSceneKey} />}
+        </AnimatePresence>
+      </VideoCanvas>
+    </VideoPausedContext.Provider>
   );
 }
 
